@@ -1,6 +1,13 @@
 package com.customer.Customaer_Details.services;
 
 
+import com.customer.Customaer_Details.customerEntity.Customer;
+import com.customer.Customaer_Details.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomerService {
