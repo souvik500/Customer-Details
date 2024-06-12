@@ -1,0 +1,32 @@
+<form id="loginForm">
+    <label for="login_id">Login ID:</label>
+    <input type="text" id="login_id" name="login_id"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <input type="submit" value="Login">
+</form>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const loginId = document.getElementById('login_id').value;
+        const password = document.getElementById('password').value;
+
+        fetch('https://qa.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ login_id: loginId, password: password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                window.location.href = 'customerList.html';
+            } else {
+                alert('Authentication failed!');
+            }
+        });
+    });
+</script>
