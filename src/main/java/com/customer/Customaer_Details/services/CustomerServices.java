@@ -4,43 +4,33 @@ package com.customer.Customaer_Details.services;
 import com.customer.Customaer_Details.customerEntity.Customer;
 import com.customer.Customaer_Details.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CustomerService {
+public class CustomerServices {
     @Autowired
-    private CustomerRepository repository;
+    private CustomerRepository customerRepository;
 
     public Customer saveCustomer(Customer customer) {
-        return repository.save(customer);
+        return customerRepository.save(customer);
     }
 
-    public Customer updateCustomer(Long id, Customer customer) {
-        Customer existingCustomer = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-        existingCustomer.setFirstName(customer.getFirstName());
-        existingCustomer.setLastName(customer.getLastName());
-        existingCustomer.setStreet(customer.getStreet());
-        existingCustomer.setAddress(customer.getAddress());
-        existingCustomer.setCity(customer.getCity());
-        existingCustomer.setState(customer.getState());
-        existingCustomer.setEmail(customer.getEmail());
-        existingCustomer.setPhone(customer.getPhone());
-        return repository.save(existingCustomer);
+    public Optional<Customer> getCustomerById(Long id) {
+        return customerRepository.findById(id);
     }
 
-    public List<Customer> getCustomers(Pageable pageable) {
-        return repository.findAll(pageable).getContent();
-    }
-
-    public Customer getCustomerById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    public Page<Customer> getAllCustomers(int page, int size, String sortField, String sortDirection) {
+        Sort sort = Sort.by(sortField);
+        if (sortDirection.equalsIgnoreCase("desc")) {
+            sort = sort.descending();
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return customerRepository.findAll(pageable);
     }
 
     public void deleteCustomer(Long id) {
-        repository.deleteById(id);
+        customerRepository.deleteById(id);
     }
 }
-
